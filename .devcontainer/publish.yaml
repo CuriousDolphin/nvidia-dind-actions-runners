@@ -1,0 +1,48 @@
+name: Publish Nvidia-Actions-Runner Images on Dockerhub
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+env:
+  REGISTRY: isnob/nvidia-actions-runner
+  IMAGE_NAME: nvidia-actions-runner
+  USERNAME: isnob46
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log into registry 
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Nvidia-Dind Image
+        id: build-and-push
+        uses: docker/build-push-action@v3
+        with:
+          file: Dockerfile.nvidia-dind
+          push: true
+          tags: 
+            - isnob46/nvidia-dind:latest
+            - isnob46/nvidia-dind:cuda12
+
+      - name: Build and push Nvidia-Actions-Runner Image
+        id: build-and-push
+        uses: docker/build-push-action@v3
+        with:
+          file: Dockerfile.nvidia-actions-runner
+          push: true
+          tags: 
+            - isnob46/nvidia-actions-runner:latest
+            - isnob46/nvidia-actions-runner:cuda12-2.319

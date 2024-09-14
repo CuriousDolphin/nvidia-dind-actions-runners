@@ -33,16 +33,12 @@ jobs:
         with:
           file: Dockerfile.nvidia-dind
           push: true
-          tags: 
-            - isnob46/nvidia-dind:latest
-            - isnob46/nvidia-dind:cuda12
+          tags: isnob46/nvidia-dind:latest,isnob46/nvidia-dind:cuda12
 
       - name: Build and push Nvidia-Actions-Runner Image
-        id: build-and-push
+        id: build-and-push-runner
         uses: docker/build-push-action@v3
         with:
           file: Dockerfile.nvidia-actions-runner
           push: true
-          tags: 
-            - isnob46/nvidia-actions-runner:latest
-            - isnob46/nvidia-actions-runner:cuda12-2.319
+          tags: isnob46/nvidia-actions-runner:latest,isnob46/nvidia-actions-runner:cuda12-2.319
